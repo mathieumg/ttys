@@ -3,7 +3,7 @@ var fs = require('fs')
 var tty = require('tty')
 var assert = require('assert')
 
-if (tty.isatty(0)) {
+if (tty.isatty(0) || process.platform === 'win32') {
   exports.stdin = process.stdin
 } else {
   var ttyFd = fs.openSync('/dev/tty', 'r')
@@ -12,9 +12,9 @@ if (tty.isatty(0)) {
   exports.stdin._type = 'tty'
 }
 
-if (tty.isatty(1)) {
+if (tty.isatty(1) || process.platform === 'win32') {
   exports.stdout = process.stdout
-} else {
+} else { 
   var ttyFd = fs.openSync('/dev/tty', 'w')
   assert(tty.isatty(ttyFd))
   exports.stdout = new tty.WriteStream(ttyFd)
